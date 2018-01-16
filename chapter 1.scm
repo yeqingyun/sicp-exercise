@@ -1,9 +1,7 @@
 ;; 1.3
-(define (lager a b c) (cond 
-					   ((and (< a c) (< b c)) (if (< a b) (+ b c) (+ a c)))
+(define (lager a b c) (cond ((and (< a c) (< b c)) (if (< a b) (+ b c) (+ a c)))
 					   ((and (< a b) (< c b)) (if (< a c) (+ b c) (+ b a)))
-					   (else (if (< b c) (+ a c) (+ a b)))
-))
+					   (else (if (< b c) (+ a c) (+ a b)))))
 
 (define (bigger a b) (if (< a b) b a))
 (define (smaller a b) (if (< a b) a b))
