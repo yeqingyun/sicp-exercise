@@ -56,7 +56,7 @@
 ;; (+ 0 9)
 ;; 9
 
-;; 1是线性的递归过程 2是迭代的递归过程
+;; 1是线性递归过程 2是线性迭代过程
 
 
 ;; 1.10
@@ -97,3 +97,23 @@
 ;; (define (g n) (A 1 n)) f(n) = 2的n次方 
 ;; (define (h n) (A 2 n)) f(n) = 2的 (2的n次方)次方
 
+;; 1.11
+
+;;递归
+(define (f n) 
+  (if (< n 3)
+	  n
+	  (+ (f (- n 1)) (* 2 (f (- n 2))) (* 3 (f (- n 3))))))
+
+
+;;迭代
+(define (fd n) 
+  (define (fd-iter a b c n) (if (= 0 n) a (fd-iter b c (+ c (* 2 b) (* 3 a)) (- n 1))))
+(fd-iter 0 1 2 n))
+
+
+;; 1.12
+(define (psk x y) (if (< y x) 0 (if (or (= x 1) (= x y)) 1 (+ (psk (- x 1) (- y 1)) (psk x (- y 1))))))
+
+
+;; 1.14
