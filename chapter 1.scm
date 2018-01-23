@@ -117,3 +117,114 @@
 
 
 ;; 1.14
+
+
+;; 1.16
+(define (double x) (+ x x))
+(define (valve x) (/ x 2))
+(define (* a b)
+(cond ((= a 1) b)
+        ((= b 1) a)
+        ((even? b) (* (double a) (valve b)))
+        (else (+ a (* a (- b 1))))))
+
+;; 1.17
+
+(define (double x) (+ x x))
+(define (valve x) (/ x 2))
+
+
+
+(define (miter x y n)
+    (cond ((or (= x 0) (= y 0)) n)
+        ((even? y) (miter (double x) (valve y) n))
+        (else (miter x (- y 1) (+ n x)))))
+
+(define (* a b)
+  (miter a b 0))
+
+
+
+
+;;1.29
+
+(define (sum term a next b)
+    (if (> a b)
+        0
+        (+ (term a)
+           (sum term (next a) next b))))
+
+(define (simpson f a b n)
+    
+    (define h (/ (- b a) n))
+
+    (define (y k)
+        (f (+ a (* k h))))
+
+    (define (factor k)
+        (cond ((or (= k 0) (= k n))
+                1)
+              ((odd? k)
+                4)
+              (else
+                2)))
+    
+    (define (term k)
+        (* (factor k)
+           (y k)))
+
+    (define (next k)
+        (+ k 1))
+
+    (if (not (even? n))
+        0
+        (* (/ h 3)
+           (sum term (exact->inexact 0) next n))))
+
+;; 1.30
+(define (sum term a next b)
+  (define (iter a result) 
+	(if (> a b) result
+		(iter (next a) (+ (term a) result))))
+  (iter a 0))
+
+
+;; 1.31
+(define (product term a next b)
+  (if (> a b)
+	  1
+	  (* (term a) (product term (next a) next b))))
+
+(define (product term a next b)
+  (define (iter a result)
+	(if (> a b) result
+		(iter (next a) (* (term a) result))))
+  (iter a 1))
+
+(define (factorial a b) 
+  (define (even? x) ( = 0 (remainder x 2)))
+  (define (term)
+	(let ((n 1)) 
+	  (lambda (a) (if (even? n)
+					  (begin (set! n (+ 1 n)) (/ (+ a 1) a))
+					  (begin (set! n (+ 1 n)) (/ (- a 1) a))))))
+  (define (next k) (+ 2 k))
+  (product (term) a next b))
+
+
+;; 1.34
+(define (f g) (g 2))
+
+
+;; 1.35
+(define tolerance 0.00001)
+
+(define (fix-point f first-guess) 
+  (define (close-enough? v1 v2) 
+	(> tolerance (abs (- v1 v2))))
+  (define (try guess) 
+	(let ((next (f guess))) 
+	(if (close-enough? guess next)
+		next
+		(try next))))
+  (try first-guess))
