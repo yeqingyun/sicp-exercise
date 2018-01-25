@@ -232,10 +232,10 @@
 ;;(fix-point (lambda (x) (+ 1 (/ 1 x))) 1.0) 1.618...
 
 ;; 1.36
-(define (fix-point f first-guess) 
-  (define (close-enough? v1 v2) 
+(define (fix-point f first-guess)
+  (define (close-enough? v1 v2)
 	(> tolerance (abs (- v1 v2))))
-  (define (try guess step) 
+  (define (try guess step)
 	(display (format "step: ~a, guess: ~a" step guess))
 	(newline)
 	(let ((next (f guess))) 
@@ -252,7 +252,7 @@
 
 
 ;; 1.37
-(define (cont-frac n d k) 
+(define (cont-frac n d k)
   (define (iter i)
 	(if (= i k)
 		(/ (n k) (d k))
@@ -265,7 +265,7 @@
 		result
 		(iter (- i 1) 
 			  (/ (n i) (+ (d i) result)))))
-  (iter (- k 1) (/ (n k)) (d k)))
+  (iter (- k 1) (/ (n k) (d k))))
 
 
 ;; 1.38
@@ -288,3 +288,5 @@
     (define (D i)
         (- (* i 2) 1))
     (exact->inexact (cont-frac N D k)))
+
+
