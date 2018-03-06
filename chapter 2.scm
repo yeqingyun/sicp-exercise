@@ -20,8 +20,8 @@
 (define (midpoint-segment segment) 
   (let ((startPoint (start-segment segment))
 		(endPoint (end-segment segment))) 
-	(make-point (/ (+ (x-point startPoint) (x-point endPoint)) 2)
-				(/ (+ (y-point startPoint) (y-point endPoint)) 2))))
+	(make-point (/ (- (x-point startPoint) (x-point endPoint)) 2)
+				(/ (- (y-point startPoint) (y-point endPoint)) 2))))
 
 ;;(midpoint-segment (make-segment (make-point 1 2) (make-point 7 8)))
 
@@ -107,7 +107,7 @@
 ;; 			 x))
 ;; 		 f)
 ;; 		x))))
-
+  
 ;; (lambda (f)
 ;;   (lambda (x)
 ;; 	(f ((lambda (x) x)
@@ -124,3 +124,52 @@
 
 
 
+(define (for-each proc tab) 
+  (define (iter f b) 
+	(if (not (null? b))
+		(begin
+		  (f (car b))
+		  (iter f (cdr b)))))
+  (iter proc tab))
+
+(define (filter f tab)
+  (define (iter p t r)
+	(if (null? t)
+		(reverse r)
+		(if (p (car t))
+			(iter p (cdr t) (cons (car t) r))
+			(iter p (cdr t) r)
+			)))
+  (iter f tab '()))
+
+(define (deep-reverse t)
+  (define (iter t r)
+	(cond ((null? t) r)
+		  ((pair? (car t)) (iter (cdr t) (cons (deep-reverse (car t)) r)))
+		  (else (iter (cdr t) (cons (car t) r)))))
+  (iter t '()))
+
+(define (square-tree tree)
+  (define (iter t)
+	(cond ((null? t) '())
+		  ((not (pair? t)) (* t t))
+		  (else (cons (iter (car t))
+					  (iter (cdr t))))))
+  (iter tree))
+
+(define (square-tree tree)
+  (map (lambda (x)
+		 (if (pair? x)
+			 (square-tree x)
+			 (* x x)))
+	   tree))
+
+
+(define (square-tree tree)
+  (define (square x)
+	(* x x))
+  (define (tree-map f t)
+	  (cond ((null? t) '())
+		  ((not (pair? (car t))) (cons (f (car t)) (tree-map f (cdr t))))
+		  (else (cons (tree-map f (car t)) (tree-map f (cdr t))))))
+  (tree-map square tree))
