@@ -264,3 +264,89 @@
 			(+ (d m) (/ (n m) (iter (+ 1 m) t))))))
   (iter 1 k))
 
+
+;; 2.17
+
+(define (last-pair ls)
+  (if (null? (cdr ls))
+	  (car ls)
+	  (last-pair (cdr ls))))
+
+;; 2.18
+(define (reverse ls)
+  (define (reverse-iter ls rs)
+	(if (null? ls)
+		rs
+		(reverse-iter (cdr ls) (cons (car ls) rs))))
+  (reverse-iter ls '()))
+
+
+;; 2.19
+(define (list-ref ls n)
+  (if (= 0 n)
+	  (car ls)
+	  (list-ref (cdr ls) (- n 1))))
+
+
+
+(define (except-first-denomination cv)
+  (cdr cv))
+
+(define (first-denomination cv)
+  (car cv))
+
+(define (no-more? cv)
+  (= 0 (length cv)))
+
+;; 2.20
+(define (same-parity a . ls)
+  (cons a (filter (lambda (x) (= (remainder x 2) (remainder a 2))) ls)))
+
+;; 2.21
+(define (square-list items)
+  (if (null? items)
+	  '()
+	  (let ((t (car items)))
+		(cons (* t t) (square-list (cdr items))))))
+
+(define (square-list items)
+  (map (lambda (x) (* x x)) items))
+
+;; 2.23
+
+(define (for-each f ls)
+  (define (iter k l)
+	(if (null? l)
+		#t
+		(begin 
+		  (f (car l))
+		  (iter k (cdr l)))))
+  (iter f ls))
+
+
+;; 2.24
+;; (1 (2 (3 4)))
+
+;; 2.25
+;; (car (cdr (car (cdr (cdr '(1 3 (5 7) 9))))))
+;; (car (car '((7))))
+;; (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr '(1 (2 (3 (4 (5 (6 7))))))))))))))))))
+
+
+;; 2.28
+(define (fringe ls)
+  (define (iter l k)
+	(if (null? l)
+		k
+		(iter (cdr l) (append k (car l)))))
+  (iter ls '()))
+
+;; 2.32
+(define (subsets s)
+  (if (null? s)
+	  (list '())
+	  (let ((rest (subsets (cdr s))))
+		(append rest 
+				(map (lambda (x)
+					   (cons (car s) x))
+					 rest)))))
