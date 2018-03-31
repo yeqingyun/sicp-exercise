@@ -350,3 +350,116 @@
 				(map (lambda (x)
 					   (cons (car s) x))
 					 rest)))))
+
+;; 2.33
+;; (cons (p x) y)
+
+;; seq2 seq1
+
+;;(lambda (x y) (+ 1 y))
+
+
+;; 2.34
+;; (+ this-coeff (* x higher-terms))
+
+
+
+;; 2.35
+;; (accumulate 
+;;  (lambda (x y) (+ x y)) 
+;;  0 
+;;  (map 
+;;   (lambda (x) 
+;; 	(if (pair? x)
+;; 		(count-leaves x)
+;; 		1))
+;;   tree))
+
+;; 2.36
+;; (map (lambda (x) (car x)))
+;; (map (lambda (x) (cdr x)))
+
+;; 2.39
+(define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+(define (reverse ls)
+  (accumulate 
+   (lambda (x y)
+	 (append y (list x)))
+   '() 
+   ls))
+
+
+
+;; 2.40
+(define (unique-pairs n)
+    (flatmap (lambda (i)
+                 (map (lambda (j) (list i j))
+                      (enumerate-interval 1 (- i 1))))
+             (enumerate-interval 1 n)))
+
+(define (remove x ls)
+  (filter
+   (lambda (i)
+	 (not (= i x)))
+   ls))
+
+;; 2.41
+(define (pairs-of-sum n s)
+  (map 
+   (lambda (i)
+	 (map
+	  (lambda (j)
+		(list i j))
+	  (remove i (enumerate-interval 1 n))))
+   (enumerate-interval 1 n)))
+
+;; 2.42
+(define (accumulate proc initlizal seq)
+  (if (null? seq)
+	  initlizal
+	  (proc (car seq)
+			(accumulate proc initlizal (cdr seq)))))
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+
+;; ((1, 2, 3) (3, 2, 1)...)
+(define (get ls n)
+  (if (= n 0)
+	  (car ls)
+	  (get (cdr ls) (- n 1))))
+
+(define (safe? k position)
+  (define (iter left current-row)
+	(if (null? left)
+		#t
+		(and 
+		 (check (car left) k current-row (get position (- k 1)))
+		 (iter (cdr left) (+ 1 current-row)))))
+  (iter position 1))
+
+(define (check prior k prior-row row)
+  (and 
+   (not (= prior k))
+   (not (= (+ prior (- row prior-row)) k))
+   (not (= (- prior (- row prior-row)) k))))
+
+
+(define (queens border-size)
+  (define (queen-cols k)
+	(if (= 0 k)
+		'()
+		(filter
+		 (lambda (position) (safe? k position))
+		 (flatmap 
+		  (lambda (rest-of-queens)
+			(map 
+			 (lambda (row)
+			   (cons row res-of-queens))
+			 (enumerate-interval 1 broder-size)))
+		  (queen-cols (- k 1))))))
+  (queen-cols border-size))
